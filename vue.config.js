@@ -3,8 +3,9 @@ module.exports = {
     configureWebpack: {
         resolve: {
             extensions: [],
-            // 配置别名
+            //=> 给某些文件夹配置别名
             alias: {
+                // "@": "src" 默认配置中 @表示 src目录
                 "assets": "@/assets",
                 "common": "@/common",
                 "components": "@/components",
