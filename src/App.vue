@@ -7,7 +7,8 @@
 
 <script>
 
-import MainTabBar from 'components/content/mainTabbar/MainTabBar.vue'
+import MainTabBar from 'components/content/mainTabbar/MainTabBar.vue';
+
 
 
 export default {
@@ -21,6 +22,5 @@ export default {
 <style>
   /* 引入初始化样式 */
   @import "assets/css/base.css";
-
 
 </style>
