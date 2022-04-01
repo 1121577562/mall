@@ -6,8 +6,14 @@
     <home-swiper :banners="banners"/>
     <recommend-view :recommend="recommends"/>
     <feature-view/>
+    <tab-control  class="fixed" 
+                  :titles="['流行','新款', '精选']" 
+                  @tabClick="handleClick"/>
 
-    <tab-control class="fixed" :titles="['流行','新款', '精选']"/>
+    <goods-list :goods="goods[currentType].list"/>
+
+
+
 
     <ul>
       <li>我是列表1</li>
@@ -119,6 +125,7 @@
 //=> 公共组件
 import NavBar from 'components/common/navbar/NavBar.vue';
 import TabControl from 'components/content/tabControl/TabControl.vue'
+import GoodsList from 'components/content/goods/GoodsList.vue'
 
 //=> home 模块中的子组件
 import HomeSwiper from './childrenComponents/HomeSwiper.vue'
@@ -134,6 +141,7 @@ export default {
   components: {
     NavBar: NavBar,
     TabControl: TabControl,
+    GoodsList: GoodsList,
     HomeSwiper: HomeSwiper,
     RecommendView: RecommendView,
     FeatureView: FeatureView
@@ -143,19 +151,20 @@ export default {
      banners: [],
      recommends: [],
      goods: {
-       pop: {
+       'pop': {
          page: 0,
          list: []
        },
-       new: {
+       'new': {
          page: 0,
          list: []
        },
-       sell: {
+       'sell': {
          page: 0,
          list: []
        }
-     }
+     },
+     currentType: 'pop'
     }
   },
   created() {
@@ -171,6 +180,7 @@ export default {
       // this.getHomeGoods('sell');
   },
   methods: {
+    // 把网络请求的业务逻辑，放入 methods，在created回调函数中直接调取这些方法即可。
     getHomeData() {
        getHomeMultidata().then(res=> {
         this.banners = res.data.banner.list;
@@ -178,13 +188,29 @@ export default {
       });
     },
     getHomeGoods(type) {
-      // 获取页面，动态计算 page的值。
+      //=>1.获page的初始值，动态计算 page的值。
       const page = this.goods[type].page + 1;
       getHomeGoods(type, page).then(res => {
-        // 存储数据 和  改变页码。
+      //=>2.存储数据 和  改变页码。
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
       });
+    },
+
+
+    // 事件监听的方法：
+    handleClick(index) {
+       switch(index) {
+        case 0:
+          this.currentType = "pop"
+          break;
+        case 1:
+          this.currentType = "new"
+          break;
+        case 2:
+          this.currentType = "sell"
+          break;    
+      }
     }
   }
 
@@ -207,5 +233,6 @@ export default {
     position: sticky;
     top: 44px;
     left: 0;
+    z-index: 10;
   }
 </style>

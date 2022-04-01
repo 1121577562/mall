@@ -28,6 +28,7 @@ export default {
   methods: {
     handleChange(index) {
       this.currentIndex = index;
+      this.$emit('tabClick', index);
     }
   }
 }
