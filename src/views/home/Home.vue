@@ -3,120 +3,25 @@
     <nav-bar class="hom-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <home-swiper :banners="banners"/>
-    <recommend-view :recommend="recommends"/>
-    <feature-view/>
-    <tab-control  class="fixed" 
-                  :titles="['流行','新款', '精选']" 
-                  @tabClick="handleClick"/>
+    <scroll class="content" 
+            ref="scroll" 
+            :probeType="3" 
+            :pullUpLoad="true" 
+            @scroll="scrollClick"
+            @pullingUp="loadMore">
+      <home-swiper :banners="banners"/>
+      <recommend-view :recommend="recommends"/>
+      <feature-view/>
+      <tab-control  class="fixed" 
+                    :titles="['流行','新款', '精选']" 
+                    @tabClick="handleClick"/>
+      <goods-list :goods="goods[currentType].list"/>
+    </scroll>
 
-    <goods-list :goods="goods[currentType].list"/>
+
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
 
 
-
-
-    <ul>
-      <li>我是列表1</li>
-    <li>我是列表2</li>
-    <li>我是列表3</li>
-    <li>我是列表4</li>
-    <li>我是列表5</li>
-    <li>我是列表6</li>
-    <li>我是列表7</li>
-    <li>我是列表8</li>
-    <li>我是列表9</li>
-    <li>我是列表10</li>
-    <li>我是列表11</li>
-    <li>我是列表12</li>
-    <li>我是列表13</li>
-    <li>我是列表14</li>
-    <li>我是列表15</li>
-    <li>我是列表16</li>
-    <li>我是列表17</li>
-    <li>我是列表18</li>
-    <li>我是列表19</li>
-    <li>我是列表20</li>
-    <li>我是列表21</li>
-    <li>我是列表22</li>
-    <li>我是列表23</li>
-    <li>我是列表24</li>
-    <li>我是列表25</li>
-    <li>我是列表26</li>
-    <li>我是列表27</li>
-    <li>我是列表28</li>
-    <li>我是列表29</li>
-    <li>我是列表30</li>
-    <li>我是列表31</li>
-    <li>我是列表32</li>
-    <li>我是列表33</li>
-    <li>我是列表34</li>
-    <li>我是列表35</li>
-    <li>我是列表36</li>
-    <li>我是列表37</li>
-    <li>我是列表38</li>
-    <li>我是列表39</li>
-    <li>我是列表40</li>
-    <li>我是列表41</li>
-    <li>我是列表42</li>
-    <li>我是列表43</li>
-    <li>我是列表44</li>
-    <li>我是列表45</li>
-    <li>我是列表46</li>
-    <li>我是列表47</li>
-    <li>我是列表48</li>
-    <li>我是列表49</li>
-    <li>我是列表50</li>
-    <li>我是列表51</li>
-    <li>我是列表52</li>
-    <li>我是列表53</li>
-    <li>我是列表54</li>
-    <li>我是列表55</li>
-    <li>我是列表56</li>
-    <li>我是列表57</li>
-    <li>我是列表58</li>
-    <li>我是列表59</li>
-    <li>我是列表60</li>
-    <li>我是列表61</li>
-    <li>我是列表62</li>
-    <li>我是列表63</li>
-    <li>我是列表64</li>
-    <li>我是列表65</li>
-    <li>我是列表66</li>
-    <li>我是列表67</li>
-    <li>我是列表68</li>
-    <li>我是列表69</li>
-    <li>我是列表70</li>
-    <li>我是列表71</li>
-    <li>我是列表72</li>
-    <li>我是列表73</li>
-    <li>我是列表74</li>
-    <li>我是列表75</li>
-    <li>我是列表76</li>
-    <li>我是列表77</li>
-    <li>我是列表78</li>
-    <li>我是列表79</li>
-    <li>我是列表80</li>
-    <li>我是列表81</li>
-    <li>我是列表82</li>
-    <li>我是列表83</li>
-    <li>我是列表84</li>
-    <li>我是列表85</li>
-    <li>我是列表86</li>
-    <li>我是列表87</li>
-    <li>我是列表88</li>
-    <li>我是列表89</li>
-    <li>我是列表90</li>
-    <li>我是列表91</li>
-    <li>我是列表92</li>
-    <li>我是列表93</li>
-    <li>我是列表94</li>
-    <li>我是列表95</li>
-    <li>我是列表96</li>
-    <li>我是列表97</li>
-    <li>我是列表98</li>
-    <li>我是列表99</li>
-    <li>我是列表100</li>
-    </ul>
 
   </div>
 </template>
@@ -126,6 +31,8 @@
 import NavBar from 'components/common/navbar/NavBar.vue';
 import TabControl from 'components/content/tabControl/TabControl.vue'
 import GoodsList from 'components/content/goods/GoodsList.vue'
+import Scroll from 'components/common/scroll/Scroll.vue'
+import BackTop from 'components/content/backTop/BackTop.vue'
 
 //=> home 模块中的子组件
 import HomeSwiper from './childrenComponents/HomeSwiper.vue'
@@ -142,6 +49,8 @@ export default {
     NavBar: NavBar,
     TabControl: TabControl,
     GoodsList: GoodsList,
+    Scroll: Scroll,
+    BackTop:BackTop,
     HomeSwiper: HomeSwiper,
     RecommendView: RecommendView,
     FeatureView: FeatureView
@@ -164,7 +73,8 @@ export default {
          list: []
        }
      },
-     currentType: 'pop'
+     currentType: 'pop',
+     isShowBackTop: false
     }
   },
   created() {
@@ -179,6 +89,7 @@ export default {
       // this.getHomeGoods('new');
       // this.getHomeGoods('sell');
   },
+
   methods: {
     // 把网络请求的业务逻辑，放入 methods，在created回调函数中直接调取这些方法即可。
     getHomeData() {
@@ -194,6 +105,8 @@ export default {
       //=>2.存储数据 和  改变页码。
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
+        //=>3.数据加载完成后，还要调用finishPullUp 返回，才能继续下一次上拉加载更多数据。
+        this.$refs.scroll.finishPullUp();
       });
     },
 
@@ -211,13 +124,33 @@ export default {
           this.currentType = "sell"
           break;    
       }
+    },
+
+    //=>监听回到顶部组件
+    backClick() {
+      //给组件绑定点击事件，那么不能监听原生的点击事件，如果需要监听，需要添加修饰符 .native, 才可以监听。
+      this.$refs.scroll.scrollTo(0, 0, 500);
+      // console.log("backClick", this.$refs);
+    },
+    // 监听滚动的位置
+    scrollClick(position) {
+      // console.log(position);
+      this.isShowBackTop = Math.abs(position.y) > 1000;
+    },
+    // 监听上拉加载更多事件
+    loadMore() {
+      this.getHomeGoods(this.currentType);
+      console.log("上拉加载更多");
     }
   }
-
 }
 </script>
   
-<style>
+<style scoped>
+  #home {
+    height: 100vh;
+    position: relative;
+  }
   .hom-nav {
     position: fixed;
     left: 0;
@@ -235,4 +168,18 @@ export default {
     left: 0;
     z-index: 10;
   }
+
+  .content {
+    /* 为什么这样定位之后，就可以让content的高度变为想要的需要去了解 */
+    overflow: hidden;
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
+  }
+
+  /* .content {
+    height: calc(100% - 93px);
+  } */
 </style>
