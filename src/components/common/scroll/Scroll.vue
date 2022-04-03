@@ -35,6 +35,8 @@ export default {
       pullUpLoad: this.pullUpLoad
     });
 
+    // console.log(this.scroll);
+
     //2.监听滚动的位置
     this.scroll.on("scroll", (position)=> {
         // console.log(position);
@@ -51,11 +53,23 @@ export default {
   methods: {
     // 1.实现回到顶部的方法
     scrollTo(x, y, time = 300) {
-      this.scroll.scrollTo(x, y, time);
+      // 防止better-scroll还没有初始化完成，调用 scrollTo 方法报错。
+      this.scroll &&  this.scroll.scrollTo(x, y, time);
     },
     // 2.当第一次上拉加载更多后，需要调用finishPullUp方法，才能进行下一次上拉加载更多数据
     finishPullUp() {
-      this.scroll.finishPullUp();
+      this.scroll && this.scroll.finishPullUp();
+    },
+
+    // 3.当图片加载完成后，调用refresh函数，让better-scroll重新计算高度
+    refresh() {
+      // console.log("++++");
+      this.scroll && this.scroll.refresh();
+    },
+
+    // 4.获取滚动区域y轴的坐标
+    getScrollY() {
+      return this.scroll ? this.scroll.y : 0;
     }
   }
 }

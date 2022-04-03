@@ -1,8 +1,7 @@
 <template>
-    <div class="goods-list-item">
-      <a :href="goodsItem.link">
+    <div class="goods-list-item" @click="itemClick">
         <div class="pic">
-          <img :src="goodsItem.show.img" alt="">
+          <img :src="goodsItem.show.img" alt="" @load="imgLoad">
         </div>
         <div class="goods-detail">
           <p>{{goodsItem.title}}</p>
@@ -10,7 +9,6 @@
           <i class="icon"></i>
           <span class="hobbise">{{goodsItem.cfav}}</span>
       </div>
-      </a>
     </div>
 </template>
 
@@ -24,6 +22,18 @@ export default {
         return {}
       }
     }
+  },
+  methods: {
+    // 1. 监听图片是否加载完成
+    imgLoad() {
+      // console.log("图片已经加载完成");
+      this.$bus.$emit("ItemImageLoad")
+    },
+    // 2. 监听goodsItem的点击，并且跳转到详情页面
+    itemClick() {
+      console.log("详情页面监听成功!!!!");
+      this.$router.push('/detail/' + this.goodsItem.iid)
+    }
   }
 }
 </script>
@@ -36,9 +46,6 @@ export default {
     margin-bottom: 55px;
   }
 
-  .goods-list-item a {
-    display: block;
-  }
 
   .goods-list-item:nth-child(2n+1) {
     padding-right: 5px;

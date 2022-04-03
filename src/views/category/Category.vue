@@ -1,6 +1,6 @@
 <template>
-  <div class="wrapper">
-    <ul class="content">
+  <div class="wrapper1">
+    <ul class="content1">
       <button @click="handleClick">按钮</button>
       <li>分类的列表1</li>
       <li>分类的列表2</li>
@@ -127,7 +127,7 @@ export default {
   },
 
   mounted() {
-    this.scroll = new  BScroll('.wrapper', {
+    this.scroll = new  BScroll('.wrapper1', {
         probeType: 3,
         pullUpLoad: true
     });
@@ -144,7 +144,7 @@ export default {
 
 <style>
 /* npm install better-scroll@1.13.2 --save */
-.wrapper {
+.wrapper1 {
   height: 150px;
   background-color: skyblue;
   overflow: hidden;
