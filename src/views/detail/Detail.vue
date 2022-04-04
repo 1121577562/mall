@@ -1,8 +1,14 @@
 <template>
   <div id="detail">
-    <detail-nav-bar/>
-    <detail-swiper :topImages="topImages"/>
-    <detail-base-info :goods="goods"/>
+    <detail-nav-bar class="detailNavBar"/>
+    <!-- 加入滚动效果 -->
+    <scroll class="content" ref="scroll">
+      <detail-swiper :topImages="topImages"/>
+      <detail-base-info :goods="goods"/>
+      <detail-shop-info :shop="shop"/>
+      <detail-goods-info :detailInfo="detailInfo" @imageLoad="imageLoad"/>
+      <detail-parmas-info :paramInfo="paramInfo" />
+    </scroll>
   </div>
 </template>
 
@@ -11,23 +17,38 @@
 import DetailNavBar from './childComponents/DetailNavBar.vue'
 import DetailSwiper from './childComponents/DetailSwiper.vue'
 import DetailBaseInfo from './childComponents/DetailBaseInfo.vue'
+import DetailShopInfo from './childComponents/DetailShopInfo.vue'
+import DetailGoodsInfo from './childComponents/DetailGoodsInfo.vue'
+import DetailParmasInfo from './childComponents/DetailParmasInfo.vue'
+
+
+// 导入公共组件
+import Scroll from 'components/common/scroll/Scroll.vue'
 
 
 // 导入detail模块的网络请求
-import {getDetail, Goods} from 'network/detail.js'
+import {getDetail, Goods, Shop, GoodsParam} from 'network/detail.js'
+
 
 export default {
   name: "Detail",
   components: {
     DetailNavBar: DetailNavBar,
     DetailSwiper: DetailSwiper,
-    DetailBaseInfo: DetailBaseInfo
+    DetailBaseInfo: DetailBaseInfo,
+    DetailShopInfo: DetailShopInfo,
+    DetailGoodsInfo: DetailGoodsInfo,
+    DetailParmasInfo: DetailParmasInfo,
+    Scroll: Scroll,
   },
   data() {
     return {
       iid: null,
       topImages: [],
-      goods: {}
+      goods: {},
+      shop: {},
+      detailInfo: {},
+      paramInfo: {}
     }
   },
   created() {
@@ -43,16 +64,49 @@ export default {
      
       // 2.获取商品数据(使用面向对象的思想对数据进行整合)
       this.goods = new Goods(data.itemInfo, data.columns, data.shopInfo.services)
-    
+
+      // 3.创建店铺信息的对象
+      this.shop = new Shop(data.shopInfo);
+
+      // 4.保存商品的详情数据
+      this.detailInfo = data.detailInfo;
+
+
+      // 5.获取参数的信息
+      this.paramInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule);
+
     });
   },
 
   methods: {
-
+    // 监听详情页面图片是否加载完成，手动调用 refresh方法 (防止better-scroll计算高度的问题)
+    imageLoad() {
+      this.$refs.scroll.refresh();
+    }
   }
 }
 </script>
 
-<style>
+<style scoped>
+ #detail {
+  position: relative;
+  z-index: 10;
+  background-color: #fff;
+  /* 把detail页面的高度，设置为视口的高度 */
+  height: 100vh;
+ }
+
+  /* 给detailNavBar设置定位，提高它的层级 */
+  .detailNavBar {
+    position: relative;
+    z-index: 10;
+    background-color: #fff;
+  }
+
+  /* 使用 calc函数，动态计算 content内容的高度 */
+ .content {
+   height: calc(100% - 44px);
+ }
+
 
 </style>
