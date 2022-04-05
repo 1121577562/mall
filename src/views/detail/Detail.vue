@@ -9,6 +9,7 @@
       <detail-goods-info :detailInfo="detailInfo" @imageLoad="imageLoad"/>
       <detail-parmas-info :paramInfo="paramInfo" />
       <detail-comment-info :commentInfo="commentInfo"/>
+      <goods-list :goods="recommends" />
     </scroll>
   </div>
 </template>
@@ -25,11 +26,12 @@ import DetailCommentInfo from './childComponents/DetailCommentInfo.vue'
 
 // 导入公共组件
 import Scroll from 'components/common/scroll/Scroll.vue'
+import GoodsList from 'components/content/goods/GoodsList.vue'
 
 
 // 导入detail模块的网络请求
-import {getDetail, Goods, Shop, GoodsParam} from 'network/detail.js'
-
+import {getDetail,getRecommend, Goods, Shop, GoodsParam} from 'network/detail.js'
+import {debounce} from 'common/utils.js'
 
 export default {
   name: "Detail",
@@ -42,6 +44,7 @@ export default {
     DetailParmasInfo: DetailParmasInfo,
     DetailCommentInfo: DetailCommentInfo,
     Scroll: Scroll,
+    GoodsList: GoodsList
   },
   data() {
     return {
@@ -51,7 +54,9 @@ export default {
       shop: {},
       detailInfo: {},
       paramInfo: {},
-      commentInfo: {}
+      commentInfo: {},
+      recommends: [],
+      itemImgListener: null
     }
   },
   created() {
@@ -87,6 +92,12 @@ export default {
         this.commentInfo = data.rate.list[0];
       }
     });
+
+    // 3.请求推荐数据
+    getRecommend().then(res => {
+      this.recommends = res.data.list;
+      // console.log(res);
+    })
   },
 
   methods: {
@@ -94,6 +105,18 @@ export default {
     imageLoad() {
       this.$refs.scroll.refresh();
     }
+  },
+  mounted() {
+    // 监听推荐的图片是否加载完成，并且做防抖操作。
+    const refresh = debounce(this.$refs.scroll.refresh, 200);
+    this.itemImgListener = () =>{
+      refresh();
+    }
+    this.$bus.$on("ItemImageLoad",this.itemImgListener)
+  },
+  destroyed() {
+    // 在当前组件销毁的时候，取消ItemImageLoad 事件的监听 (应该Detail组件，没有被keep-alive包裹，因此不能监听到 deactivated 事件)
+    this.$bus.$off("ItemImageLoad",this.itemImgListener)
   }
 }
 </script>z

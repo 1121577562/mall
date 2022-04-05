@@ -27,6 +27,7 @@
 </template>
 
 <script>
+// 引入 utils.js 只是为了把 formatDate 方法，放到 String.prototype上。
 import {formatDate} from 'common/utils.js'
 
 export default {
@@ -54,7 +55,7 @@ export default {
     /**
      * 问题: 如何将服务器返回的时间戳 转成 时间格式化字符串
      *    时间戳：1537535915 (服务器返回的是秒)
-     *    1. 将事件戳转成 Date对象
+     *    1. 将时间戳转成 Date对象
      *    const date = new Date(1537535915 * 1000); //=>因为 Date构造函数，接收的参数是毫秒，因此需要将时间戳乘于 1000
      *    2.将 date进行格式化，转成对应的字符串
      */

@@ -43,10 +43,7 @@ export default {
   }
 
 
-/* 
-  .infoSize {
-    
-  } */
+
 
   .infoParam {
     padding: 20px 0;

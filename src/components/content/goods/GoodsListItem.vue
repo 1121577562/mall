@@ -1,7 +1,7 @@
 <template>
     <div class="goods-list-item" @click="itemClick">
         <div class="pic">
-          <img :src="goodsItem.show.img" alt="" @load="imgLoad">
+          <img :src="showImage" alt="" @load="imgLoad">
         </div>
         <div class="goods-detail">
           <p>{{goodsItem.title}}</p>
@@ -23,8 +23,24 @@ export default {
       }
     }
   },
+  computed: {
+    showImage() {
+      // 如果存在 image，则使用image，否则再往show中取img
+      return this.goodsItem.image || this.goodsItem.show.img;
+    }
+  },
   methods: {
     // 1. 监听图片是否加载完成
+    /**
+     *  遇到的问题：
+     *     在Home.vue 文件监听ItemImageLoad 事件时是可以的，但是又在 Detail.vue 文件中使用到该组件了，因此在Detail.vue 文件中，当图片加载完成后，也会触发ItemImageLoad事件，但是Detail.vue 文件中的图片加载完成后，不应该在 Home.vue 文件中监听 ItemImageLoad 事件，而是在 Detail.vue 文件中监听。
+     *  解决方法：
+     *     1.在这个地方监听 this.$route.path 是否等 "/home" 或者 "/detail"， 然后发出不同的事件。
+     *     2.使用vue 中的混入方法 (暂时没有使用 混入技术，而是在每个组件中写重复的代码)
+     *           分为：
+     *               全局混入 Vue.mixins
+     *               局部混入 mixins: [mixin对象]
+     */
     imgLoad() {
       // console.log("图片已经加载完成");
       this.$bus.$emit("ItemImageLoad")

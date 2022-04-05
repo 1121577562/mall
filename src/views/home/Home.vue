@@ -84,7 +84,8 @@ export default {
      isShowBackTop: false,
      tabOffsetTop: 0,
      isTabFixed: false,
-     saveY: 0
+     saveY: 0,
+     itemImgListener: null
     }
   },
   created() {
@@ -107,11 +108,12 @@ export default {
      */
     // 3.监听GoodsListItem中图片是否加载完成
     const refresh = debounce(this.$refs.scroll.refresh, 200);
-    this.$bus.$on("ItemImageLoad", ()=> {
+    this.itemImgListener =  ()=> {
       // console.log("图片已经加载完成");
       // this.$refs.scroll &&  this.$refs.scroll.refresh();
       refresh();
-    });
+    }
+    this.$bus.$on("ItemImageLoad",this.itemImgListener);
   },
   // 离开Home 页面时，记录状态和位置
   activated() {
