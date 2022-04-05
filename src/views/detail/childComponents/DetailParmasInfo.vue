@@ -42,7 +42,15 @@ export default {
     line-height: 10px;
   }
 
+
+/* 
   .infoSize {
+    
+  } */
+
+  .infoParam {
+    padding: 20px 0;
+    border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
   }
 

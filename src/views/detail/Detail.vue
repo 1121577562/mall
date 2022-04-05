@@ -8,6 +8,7 @@
       <detail-shop-info :shop="shop"/>
       <detail-goods-info :detailInfo="detailInfo" @imageLoad="imageLoad"/>
       <detail-parmas-info :paramInfo="paramInfo" />
+      <detail-comment-info :commentInfo="commentInfo"/>
     </scroll>
   </div>
 </template>
@@ -20,7 +21,7 @@ import DetailBaseInfo from './childComponents/DetailBaseInfo.vue'
 import DetailShopInfo from './childComponents/DetailShopInfo.vue'
 import DetailGoodsInfo from './childComponents/DetailGoodsInfo.vue'
 import DetailParmasInfo from './childComponents/DetailParmasInfo.vue'
-
+import DetailCommentInfo from './childComponents/DetailCommentInfo.vue'
 
 // 导入公共组件
 import Scroll from 'components/common/scroll/Scroll.vue'
@@ -39,6 +40,7 @@ export default {
     DetailShopInfo: DetailShopInfo,
     DetailGoodsInfo: DetailGoodsInfo,
     DetailParmasInfo: DetailParmasInfo,
+    DetailCommentInfo: DetailCommentInfo,
     Scroll: Scroll,
   },
   data() {
@@ -48,7 +50,8 @@ export default {
       goods: {},
       shop: {},
       detailInfo: {},
-      paramInfo: {}
+      paramInfo: {},
+      commentInfo: {}
     }
   },
   created() {
@@ -57,24 +60,32 @@ export default {
 
     // 2.根据iid请求详情数据
     getDetail(this.iid).then(res => {
-      // 1.获取轮播数据
       console.log(res);
+
+      // 1. 获取数据
       const data = res.result;
+
+      // 2.取出轮播图的数据
       this.topImages = res.result.itemInfo.topImages;
      
-      // 2.获取商品数据(使用面向对象的思想对数据进行整合)
+      // 3.获取商品数据(使用面向对象的思想对数据进行整合)
       this.goods = new Goods(data.itemInfo, data.columns, data.shopInfo.services)
 
-      // 3.创建店铺信息的对象
+      // 4.创建店铺信息的对象
       this.shop = new Shop(data.shopInfo);
 
-      // 4.保存商品的详情数据
+      // 5.保存商品的详情数据
       this.detailInfo = data.detailInfo;
 
 
-      // 5.获取参数的信息
+      // 6.获取参数的信息
       this.paramInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule);
 
+      // 7.取出评论的信息
+      if(data.rate.cRate !== 0) {
+        // 如果评论信息存在，则在取出list中的一条信息
+        this.commentInfo = data.rate.list[0];
+      }
     });
   },
 
@@ -85,7 +96,7 @@ export default {
     }
   }
 }
-</script>
+</script>z
 
 <style scoped>
  #detail {
