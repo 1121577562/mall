@@ -5,26 +5,26 @@
     </nav-bar>
     <!-- 使用这个tab-control进行占位，当滚动的y值大于offsetTop时，让它显示。 -->
     <tab-control 
-                    :titles="['流行','新款', '精选']" 
-                    @tabClick="handleClick"
-                    ref="tabControl1"
-                    class="tabControl" v-show="isTabFixed"/>
-    <scroll class="content" 
-            ref="scroll" 
-            :probeType="3" 
-            :pullUpLoad="true" 
-            @scroll="scrollClick"
-            @pullingUp="loadMore">
+          :titles="['流行','新款', '精选']" 
+          @tabClick="handleClick"
+          ref="tabControl1"
+          class="tabControl" v-show="isTabFixed"/>
+    <scroll 
+          class="content" 
+          ref="scroll" 
+          :probeType="3" 
+          :pullUpLoad="true" 
+          @scroll="scrollClick"
+          @pullingUp="loadMore">
       <home-swiper :banners="banners" @swiperImgLoad="swiperImgLoad"/>
       <recommend-view :recommend="recommends"/>
       <feature-view/>
       <tab-control 
-                    :titles="['流行','新款', '精选']" 
-                    @tabClick="handleClick"
-                    ref="tabControl2"/>
+          :titles="['流行','新款', '精选']" 
+          @tabClick="handleClick"
+          ref="tabControl2"/>
       <goods-list :goods="goods[currentType].list"/>
     </scroll>
-
 
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
 
@@ -126,6 +126,9 @@ export default {
     // 当前组件处于不活跃时，记录y轴的坐标
     this.saveY = this.$refs.scroll.getScrollY();
     console.log("deact ivated");
+
+    // 取消ItemImageLoad 事件的监听
+    this.$bus.$off("ItemImageLoad",this.itemImgListener);
   },
   methods: {
     // 把网络请求的业务逻辑，放入 methods，在created回调函数中直接调取这些方法即可。
