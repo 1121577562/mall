@@ -40,7 +40,7 @@ export default {
     checkClick() {
       this.product.checked = !this.product.checked; 
 
-      // 点击不选中后，往外发出一个事件
+      // 点击选中按钮后，往外发出一个事件
       this.$bus.$emit("cancelSelect")
     }
   }
