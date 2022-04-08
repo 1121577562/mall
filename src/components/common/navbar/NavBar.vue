@@ -21,6 +21,7 @@ export default {
 <style>
    .nav-bar {
      display: flex;
+     align-items: center;
      line-height: 44px; 
      /* 导航栏的高度一般是44px */
      text-align: center;

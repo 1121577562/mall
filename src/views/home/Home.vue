@@ -39,7 +39,7 @@ import NavBar from 'components/common/navbar/NavBar.vue';
 import TabControl from 'components/content/tabControl/TabControl.vue'
 import GoodsList from 'components/content/goods/GoodsList.vue'
 import Scroll from 'components/common/scroll/Scroll.vue'
-import BackTop from 'components/content/backTop/BackTop.vue'
+
 
 //=> home 模块中的子组件
 import HomeSwiper from './childrenComponents/HomeSwiper.vue'
@@ -49,6 +49,7 @@ import FeatureView from './childrenComponents/FeatureView.vue'
 //=> 网络请求相关
 import {getHomeMultidata,getHomeGoods} from 'network/home.js'
 import {debounce} from 'common/utils.js'
+import {backTopMixin} from 'common/mixin.js'
 
 export default {
   name: "Home",
@@ -57,11 +58,11 @@ export default {
     TabControl: TabControl,
     GoodsList: GoodsList,
     Scroll: Scroll,
-    BackTop:BackTop,
     HomeSwiper: HomeSwiper,
     RecommendView: RecommendView,
     FeatureView: FeatureView
   },
+  mixins: [backTopMixin],
   data(){
     return {
      banners: [],
@@ -81,7 +82,6 @@ export default {
        }
      },
      currentType: 'pop',
-     isShowBackTop: false,
      tabOffsetTop: 0,
      isTabFixed: false,
      saveY: 0,
@@ -170,18 +170,19 @@ export default {
       this.$refs.tabControl2.currentIndex = index;
     },
 
-    //=>监听回到顶部组件
-    backClick() {
-      //给组件绑定点击事件，那么不能监听原生的点击事件，如果需要监听，需要添加修饰符 .native, 才可以监听。
-      this.$refs.scroll.scrollTo(0, 0, 500);
-      // console.log("backClick", this.$refs);
-    },
+    //=>使用混入的方式：mixin.js
+    // //=>监听回到顶部组件
+    // backClick() {
+    //   //给组件绑定点击事件，那么不能监听原生的点击事件，如果需要监听，需要添加修饰符 .native, 才可以监听。
+    //   this.$refs.scroll.scrollTo(0, 0, 500);
+    //   // console.log("backClick", this.$refs);
+    // },
     // 监听滚动的位置
     scrollClick(position) {
       // console.log(position);
       // 1.判断 BackTop 是否显示
-      this.isShowBackTop = Math.abs(position.y) > 1000;
-
+      this.listenShowBackTop(Math.abs(position.y));
+      
       // 2.决定tabControl是否吸顶(position: fixed)
       this.isTabFixed = Math.abs(position.y) > this.tabOffsetTop;
     },

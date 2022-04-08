@@ -11,6 +11,8 @@
       <detail-comment-info ref="comment" :commentInfo="commentInfo"/>
       <goods-list ref="recommend" :goods="recommends" />
     </scroll>
+    <detail-bottom-bar @addCart="addToCart"/>
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -23,6 +25,7 @@ import DetailShopInfo from './childComponents/DetailShopInfo.vue'
 import DetailGoodsInfo from './childComponents/DetailGoodsInfo.vue'
 import DetailParmasInfo from './childComponents/DetailParmasInfo.vue'
 import DetailCommentInfo from './childComponents/DetailCommentInfo.vue'
+import DetailBottomBar from './childComponents/DetailBottomBar.vue'
 
 // 导入公共组件
 import Scroll from 'components/common/scroll/Scroll.vue'
@@ -32,6 +35,7 @@ import GoodsList from 'components/content/goods/GoodsList.vue'
 // 导入detail模块的网络请求
 import {getDetail,getRecommend, Goods, Shop, GoodsParam} from 'network/detail.js'
 import {debounce} from 'common/utils.js'
+import {backTopMixin} from 'common/mixin.js'
 
 export default {
   name: "Detail",
@@ -43,9 +47,11 @@ export default {
     DetailGoodsInfo: DetailGoodsInfo,
     DetailParmasInfo: DetailParmasInfo,
     DetailCommentInfo: DetailCommentInfo,
+    DetailBottomBar: DetailBottomBar,
     Scroll: Scroll,
     GoodsList: GoodsList
   },
+  mixins: [backTopMixin],
   data() {
     return {
       iid: null,
@@ -190,9 +196,25 @@ export default {
           }
       }
 
-    
+      // 3.是否显示回到顶部按钮
+      this.listenShowBackTop(positionY);
+    },
 
+    addToCart() {
+      //=>1.获取购物车需要展示的信息
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price =this.goods.realPrice;
+      product.iid = this.iid;
+
+      //=>2.将商品添加到购物车里面
+      // this.$store.commit('addCart', product);
+      this.$store.dispatch('addCart', product)
+      // console.log(product)
     }
+
   },
   mounted() {
     // 监听推荐的图片是否加载完成，并且做防抖操作,然后调用 refresh方法，重新计算高度。
@@ -235,7 +257,7 @@ export default {
 
   /* 使用 calc函数，动态计算 content内容的高度 */
  .content {
-   height: calc(100% - 44px);
+   height: calc(100% - 44px - 49px);
  }
 
 
