@@ -9,7 +9,7 @@
     <cart-list/>
 
     <!-- 底部汇总 -->
-    <cart-bottom-bar :isTotalChecked="isTotalChecked" @allClick="allClick"/>
+    <cart-bottom-bar />
   </div>
 </template>
 
@@ -33,7 +33,6 @@ export default {
   },
   data() {
     return {
-        isTotalChecked: false
     }
   },
   computed: {
@@ -53,48 +52,10 @@ export default {
      })
   },
   methods: {
-    // 判断是否全部选中
-    allSelect() {
-      let cartList = this.$store.state.cartList;
-      if (cartList.length !== 0) {
-          this.isTotalChecked =cartList.every(item=> {
-            return item.checked === true;
-          })
-      }
-    },
-    // 监听全选按钮的点击 (当点击全选按钮后，实现全部选中，再次点击，实现全部取消)
-    allClick() {
-      let cartList = this.$store.state.cartList,
-          flag = this.isTotalChecked;
-      if (cartList.length !== 0) {
-          if(flag) {
-            cartList.map(item=> {
-              return item.checked = false;
-            });
-          } else {
-            cartList.map(item=> {
-              return item.checked = true;
-            });
-          }
-          this.allSelect();
-      }
-    }
   },
 
   created() {
     // console.log(this.$store);
-  },
-
-  activated() {
-    console.log(this.$store.state.cartList);
-    // 当页面处于活跃状态时，调用 allSelect 方法，判断是否全部选中
-    this.allSelect();
-  },
-  mounted() {
-    // 监听取消选中的事件
-    this.$bus.$on("cancelSelect", ()=> {
-      this.allSelect();
-    })
   }
 }
 </script>

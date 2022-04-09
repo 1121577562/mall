@@ -1,7 +1,10 @@
 <template>
   <div class="cartBottomBar">
-      <div class="checkArea" @click="allClick">
-        <check-button class="checkButton" :isChecked="isTotalChecked"/>
+      <div class="checkArea" >
+        <check-button 
+                    class="checkButton"
+                    :isChecked="isTotalChecked"
+                    @click.native="allClick"/>
         <span>全选</span>
       </div>
       
@@ -23,12 +26,6 @@ export default {
   components: {
     CheckButton: CheckButton
   },
-  props: {
-    isTotalChecked: {
-      type: Boolean,
-      default: false
-    }
-  },
   computed: {
     totalPrice() {
      return "￥" + this.$store.state.cartList.filter(item => {
@@ -41,11 +38,28 @@ export default {
       return this.$store.state.cartList.filter(item => {
         return item.checked;
       }).length;
-    }
+    },
+    
+    // 判断是否全部选中
+    isTotalChecked() {
+      let cartList = this.$store.state.cartList;
+      if(cartList.length === 0) return false;
+      return !cartList.find(item => !item.checked);
+    },
   },
   methods: {
+    // 监听全选按钮的点击 (当点击全选按钮后，实现全部选中，再次点击，实现全部取消)
     allClick() {
-      this.$emit("allClick");
+      let cartList = this.$store.state.cartList;
+      if(this.isTotalChecked) { //=>全部选中
+        cartList.forEach(item => {
+          return item.checked = false;
+        })
+      } else { //=>部分 或者 全部不选中
+        cartList.forEach(item => {
+          return item.checked = true;
+        })
+      } 
     }
   }
 }
