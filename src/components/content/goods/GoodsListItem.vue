@@ -1,7 +1,8 @@
 <template>
     <div class="goods-list-item" @click="itemClick">
         <div class="pic">
-          <img :src="showImage" alt="" @load="imgLoad">
+          <!-- :key="showImage" 动态绑定key，是为了防止Vue对组件的复用，造成图片不变  -->
+          <img v-lazy="showImage" alt="" :key="showImage" @load="imgLoad">
         </div>
         <div class="goods-detail">
           <p>{{goodsItem.title}}</p>

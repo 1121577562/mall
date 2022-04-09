@@ -2,9 +2,9 @@
   <div class="cartBottomBar">
       <div class="checkArea" >
         <check-button 
-                    class="checkButton"
-                    :isChecked="isTotalChecked"
-                    @click.native="allClick"/>
+            class="checkButton"
+            :isChecked="isTotalChecked"
+            @click.native="allClick"/>
         <span>全选</span>
       </div>
       
@@ -12,7 +12,7 @@
         合计: {{totalPrice}}
       </div>
 
-      <div class="calculation">
+      <div class="calculation" @click="calculationClick">
         去计算: ({{checkLength}})
       </div>
   </div>
@@ -48,7 +48,7 @@ export default {
     },
   },
   methods: {
-    // 监听全选按钮的点击 (当点击全选按钮后，实现全部选中，再次点击，实现全部取消)
+    //=> 1.监听全选按钮的点击 (当点击全选按钮后，实现全部选中，再次点击，实现全部取消)
     allClick() {
       let cartList = this.$store.state.cartList;
       if(this.isTotalChecked) { //=>全部选中
@@ -60,6 +60,13 @@ export default {
           return item.checked = true;
         })
       } 
+    },
+    //=> 2.监听去计算的按钮
+    calculationClick() {
+      // 如果没有选择商品，则提升用户去选择商品
+      if(!this.isTotalChecked) {
+        this.$toast.show("请选择购买的商品", 2000);
+      }
     }
   }
 }

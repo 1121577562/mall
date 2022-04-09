@@ -36,6 +36,8 @@ import GoodsList from 'components/content/goods/GoodsList.vue'
 import {getDetail,getRecommend, Goods, Shop, GoodsParam} from 'network/detail.js'
 import {debounce} from 'common/utils.js'
 import {backTopMixin} from 'common/mixin.js'
+import {mapActions} from 'vuex'
+
 
 export default {
   name: "Detail",
@@ -150,6 +152,8 @@ export default {
   },
 
   methods: {
+    // mapActions 方法，态会把 actions.js 文件中的方法，拿到 methods对象中，然后就直接可以在 methods对象调用了
+    ...mapActions(["addCart"]),
     // 监听详情页面图片是否加载完成，手动调用 refresh方法 (防止better-scroll计算高度的问题)
     imageLoad() {
       this.$refs.scroll.refresh();
@@ -209,10 +213,17 @@ export default {
       product.price =this.goods.realPrice;
       product.iid = this.iid;
 
-      //=>2.将商品添加到购物车里面
+      //=>2.将商品添加到购物车里面 (1.Promise 2.mapActions)
       // this.$store.commit('addCart', product);
-      this.$store.dispatch('addCart', product)
-      // console.log(product)
+      // this.$store.dispatch('addCart', product).then(res => {
+      //   console.log(res);
+      // });
+
+      // 使用 mapAction 对上面的代码进行简化
+      this.addCart(product).then(res => {
+        this.$toast.show(res, 2000);
+        console.log(res);
+      })
     }
 
   },
