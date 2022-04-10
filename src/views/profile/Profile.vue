@@ -1,15 +1,123 @@
 <template>
-  <div>
-    <h2>我是profile页面</h2>
+  <div class="profile">
+    <nav-bar class="navBar">
+      <div slot="left" class="arrow"></div>
+      <div slot="center">我的购物街</div>
+      <div slot="right" class="dot">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav-bar>
+    <header-content />
+    <listGroup class="listGroup1"> 
+      <list-group-item>
+        <div class="listGroupItem">
+          <img src="~assets/img/profile/jd/pay.png" alt="">
+          <p class="desc">代付款</p>
+        </div>
+        <div class="listGroupItem">
+          <img src="~assets/img/profile/jd/receiver.png" alt="">
+          <p class="desc">待收货</p>
+        </div>  
+        <div class="listGroupItem">
+          <img src="~assets/img/profile/jd/regoods.png" alt="">
+          <p class="desc">退换 / 售后</p>
+        </div>  
+        <div class="listGroupItem">
+          <img src="~assets/img/profile/jd/indent.png" alt="">
+          <p class="desc">全部订单</p>
+        </div>    
+      </list-group-item>
+    </listGroup>
+    <listGroup class="listGroup2">
+      <list-group-item>
+        <div class="listGroupItem">
+          <span>0</span>
+          <p class="desc">优惠券</p>
+        </div>
+        <div class="listGroupItem">
+          <span>开通有礼</span>
+          <p class="desc">白条</p>
+        </div>  
+        <div class="listGroupItem">
+          <span>239</span>
+          <p class="desc">京豆</p>
+        </div>  
+        <div class="listGroupItem">
+          <span>0</span>
+          <p class="desc">红包</p>
+        </div>    
+        <div class="listGroupItem">
+          <img src="~assets/img/profile/jd/assets.png" alt="">
+          <p class="desc">我的资产</p>
+        </div>    
+      </list-group-item>
+    </listGroup>
+
+    <activity/>
+   
   </div>
 </template>
 
 <script>
+// 导入公共组件
+import NavBar from 'components/common/navbar/NavBar.vue'
+
+// 导入子组件
+import HeaderContent from './childComponents/HeaderContent.vue'
+import ListGroup from './childComponents/ListGroup.vue'
+import ListGroupItem from './childComponents/ListGroupItem.vue'
+import Activity from './childComponents/Activity.vue'
+
+
 export default {
-  name: "Profile"
+  name: "Profile",
+  components: {
+    NavBar: NavBar,
+    HeaderContent: HeaderContent,
+    ListGroup: ListGroup,
+    ListGroupItem: ListGroupItem,
+    Activity: Activity
+  }
 }
 </script>
 
-<style>
+<style scoped>
+  .profile {
+    height: 100vh;
+    background-color: #f7f7f7;
+  }
 
+  .navBar {
+    font-size: 14px;
+    color: #333;
+  }
+
+  .arrow::before {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-left: 2px solid #5d5f6a;
+    border-bottom: 2px solid #5d5f6a;
+    transform: rotate(45deg);
+    margin-left: 10px;
+  }
+
+  .dot span {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background-color: #5d5f6a;
+    border-radius: 50%;
+    margin: 0 3px;
+  }
+
+  .listGroup1 {
+    position: relative;
+    top: -16px;
+  }
+
+  
 </style>
