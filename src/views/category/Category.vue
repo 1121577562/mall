@@ -1,154 +1,172 @@
 <template>
-  <div class="wrapper1">
-    <ul class="content1">
-      <button @click="handleClick">按钮</button>
-      <li>分类的列表1</li>
-      <li>分类的列表2</li>
-      <li>分类的列表3</li>
-      <li>分类的列表4</li>
-      <li>分类的列表5</li>
-      <li>分类的列表6</li>
-      <li>分类的列表7</li>
-      <li>分类的列表8</li>
-      <li>分类的列表9</li>
-      <li>分类的列表10</li>
-      <li>分类的列表11</li>
-      <li>分类的列表12</li>
-      <li>分类的列表13</li>
-      <li>分类的列表14</li>
-      <li>分类的列表15</li>
-      <li>分类的列表16</li>
-      <li>分类的列表17</li>
-      <li>分类的列表18</li>
-      <li>分类的列表19</li>
-      <li>分类的列表20</li>
-      <li>分类的列表21</li>
-      <li>分类的列表22</li>
-      <li>分类的列表23</li>
-      <li>分类的列表24</li>
-      <li>分类的列表25</li>
-      <li>分类的列表26</li>
-      <li>分类的列表27</li>
-      <li>分类的列表28</li>
-      <li>分类的列表29</li>
-      <li>分类的列表30</li>
-      <li>分类的列表31</li>
-      <li>分类的列表32</li>
-      <li>分类的列表33</li>
-      <li>分类的列表34</li>
-      <li>分类的列表35</li>
-      <li>分类的列表36</li>
-      <li>分类的列表37</li>
-      <li>分类的列表38</li>
-      <li>分类的列表39</li>
-      <li>分类的列表40</li>
-      <li>分类的列表41</li>
-      <li>分类的列表42</li>
-      <li>分类的列表43</li>
-      <li>分类的列表44</li>
-      <li>分类的列表45</li>
-      <li>分类的列表46</li>
-      <li>分类的列表47</li>
-      <li>分类的列表48</li>
-      <li>分类的列表49</li>
-      <li>分类的列表50</li>
-      <li>分类的列表51</li>
-      <li>分类的列表52</li>
-      <li>分类的列表53</li>
-      <li>分类的列表54</li>
-      <li>分类的列表55</li>
-      <li>分类的列表56</li>
-      <li>分类的列表57</li>
-      <li>分类的列表58</li>
-      <li>分类的列表59</li>
-      <li>分类的列表60</li>
-      <li>分类的列表61</li>
-      <li>分类的列表62</li>
-      <li>分类的列表63</li>
-      <li>分类的列表64</li>
-      <li>分类的列表65</li>
-      <li>分类的列表66</li>
-      <li>分类的列表67</li>
-      <li>分类的列表68</li>
-      <li>分类的列表69</li>
-      <li>分类的列表70</li>
-      <li>分类的列表71</li>
-      <li>分类的列表72</li>
-      <li>分类的列表73</li>
-      <li>分类的列表74</li>
-      <li>分类的列表75</li>
-      <li>分类的列表76</li>
-      <li>分类的列表77</li>
-      <li>分类的列表78</li>
-      <li>分类的列表79</li>
-      <li>分类的列表80</li>
-      <li>分类的列表81</li>
-      <li>分类的列表82</li>
-      <li>分类的列表83</li>
-      <li>分类的列表84</li>
-      <li>分类的列表85</li>
-      <li>分类的列表86</li>
-      <li>分类的列表87</li>
-      <li>分类的列表88</li>
-      <li>分类的列表89</li>
-      <li>分类的列表90</li>
-      <li>分类的列表91</li>
-      <li>分类的列表92</li>
-      <li>分类的列表93</li>
-      <li>分类的列表94</li>
-      <li>分类的列表95</li>
-      <li>分类的列表96</li>
-      <li>分类的列表97</li>
-      <li>分类的列表98</li>
-      <li>分类的列表99</li>
-      <li>分类的列表100</li>
-    </ul>
+  <div class="category">
+    <nav-bar class="categoryNavBar">
+      <div slot="center">商品分类</div>
+    </nav-bar>
+    <div class="categoryContent">
+      <tab-menu :categorys="categorys" @tabMenuItemClick="tabMenuItemClick"/>
+      <scroll id="tabContent" ref="scroll">
+        <tab-content-category :subCategories="showSubCategories"></tab-content-category>
+        <tab-control :titles="['综合', '新品','销量']" @tabClick="tabClick"/>
+        <tab-content-detail :categoryDetail="showCategoryDetail"/>
+      </scroll>
+    </div>
   </div>
 </template>
 
 <script>
-import BScroll from 'better-scroll';
+// 引入公共组件
+import NavBar from 'components/common/navbar/NavBar.vue'
+import Scroll from 'components/common/scroll/Scroll.vue'
+import TabControl from 'components/content/tabControl/TabControl.vue'
+
+// 引入子组件
+import TabMenu from './childComponents/TabMenu.vue'
+import TabContentCategory from './childComponents/TabContentCategory.vue'
+import TabContentDetail from './childComponents/TabContentDetail.vue'
+
+// 引入API、方法
+import {getCategory, getSubCategory, getCategoryDetail} from 'network/category.js'
+import {POP, NEW, SELL} from 'common/const.js'
 
 export default {
   name: "Category",
+  components: {
+    NavBar: NavBar,
+    Scroll: Scroll,
+    TabControl: TabControl,
+    TabMenu: TabMenu,
+    TabContentCategory: TabContentCategory,
+    TabContentDetail: TabContentDetail
+  },
   data() {
     return {
-      scroll: null
+      categorys: [],
+      categoryData: [],
+      currentIndex: -1,
+      currentType: POP
     }
   },
   // 组件创建完成后调用 created函数
   created() {
-    
+    // 1.请求分类菜单信息
+    this._getCategory();
   },
-  methods: {
-    handleClick() {
-      console.log("button按钮被点击");
+  mounted() {
+    this.$bus.$on("ItemImageLoad", ()=> {
+      this.$refs.scroll.refresh();
+    })
+  },
+  computed: {
+    showSubCategories() {
+      // 如果数据没有请求回来，则默认返回一个空对象，否则返回该类别的数据
+      if(this.currentIndex === -1) {
+        return {}
+      }
+      return this.categoryData[this.currentIndex].subCategories;
+    },
+    showCategoryDetail() {
+      if(this.currentIndex === -1) {
+        return []
+      }
+      return this.categoryData[this.currentIndex].categoryDetail[this.currentType];
     }
   },
+  methods: {
+    _getCategory() {
+      getCategory().then(res=> {
+        // 1.获取分类数据
+        this.categorys = res.data.category.list;
 
-  mounted() {
-    this.scroll = new  BScroll('.wrapper1', {
-        probeType: 3,
-        pullUpLoad: true
-    });
-    this.scroll.on("scroll", (position)=> {
-      console.log(position);
-    });
-    this.scroll.on("pullingUp", ()=> {
-      console.log("上拉加载更多数据")
-      this.scroll.finishPullUp();
-    });
+        // 2.初始化每个类别的子数据
+        for(let i = 0; i < this.categorys.length; i++) {
+          this.categoryData[i] = {
+            subCategories: {},
+            categoryDetail: {
+              "pop": [],
+              "new": [],
+              "sell": []
+            }
+          }
+        }
+
+        // 3.请求第一个分类的数据
+        this._getSubCategories(0);
+      })
+    },
+    _getSubCategories(index) {
+      this.currentIndex = index;
+      const mailKey = this.categorys[index].maitKey;
+      getSubCategory(mailKey).then(res => {
+        // console.log(res);
+        this.categoryData[index].subCategories = res.data;
+        // 不知道这句话的意义 (这句话的意思是，把categoryData 数组，转换为对象进行存储)
+        this.categoryData = {...this.categoryData};
+        this._getCateGoryDetail(POP);
+        this._getCateGoryDetail(SELL);
+        this._getCateGoryDetail(NEW);
+      })
+    },
+    _getCateGoryDetail(type) {
+      //1.获取请求的miniWallkey
+      const miniWallkey = this.categorys[this.currentIndex].miniWallkey;
+      //2.发送请求，传入miniWallkey 和 type
+      getCategoryDetail(miniWallkey, type).then(res => { 
+          // 3.将获取的数据保存下来
+          this.categoryData[this.currentIndex].categoryDetail[type] = res;
+          this.categoryData = {...this.categoryData};
+      });
+    },
+
+    //监听tabControl组件发出的事件
+    tabClick(index) {
+      console.log(this.categoryData[0]);
+      // console.log(index);
+      switch(index) {
+        case 0:
+          this.currentType = POP;
+        break;
+        case 1:
+          this.currentType = NEW;
+        break;
+        case 2:
+          this.currentType = SELL;
+        break;  
+      }
+      // console.log(this.currentType);
+    },
+
+    // 监听左侧menu菜单的点击，然后请求数据
+    tabMenuItemClick(index) {
+      this._getSubCategories(index);
+      console.log(index);
+    }
   }
 }
 </script>
 
 <style>
 /* npm install better-scroll@1.13.2 --save */
-.wrapper1 {
-  height: 150px;
-  background-color: skyblue;
-  overflow: hidden;
-  /* overflow-y: scroll; */
+
+.category {
+  height: 100vh;
+}
+
+.categoryNavBar {
+  position: relative;
+  z-index: 9;
+  background-color: var(--color-tint);
+  color: #fff;
+  font-weight: 700;
+}
+
+.categoryContent {
+  display: flex;
+  height: calc(100% - 44px - 49px);
+}
+
+#tabContent {
+  flex: 1;
 }
 
 </style>

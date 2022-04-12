@@ -27,7 +27,7 @@ export default {
   computed: {
     showImage() {
       // 如果存在 image，则使用image，否则再往show中取img
-      return this.goodsItem.image || this.goodsItem.show.img;
+      return this.goodsItem.img || (this.goodsItem.image || this.goodsItem.show.img);
     }
   },
   methods: {
